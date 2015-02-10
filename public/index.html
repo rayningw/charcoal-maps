@@ -6,11 +6,15 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbvPYSYqQNhLgP_G6WwXzWlB9muBjauuw"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbvPYSYqQNhLgP_G6WwXzWlB9muBjauuw&libraries=visualization,places"></script>
     <script type="text/javascript" src="scripts/main.js"></script>
   </head>
   <body>
     <div id="content"></div>
+    <div id="panel">
+      <input id="address" type="textbox" value="">
+      <input type="button" value="Search" onclick="codeAddress()">
+    </div>
     <div id="map-canvas"></div>
   </body>
 </html>
