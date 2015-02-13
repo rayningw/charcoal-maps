@@ -1,8 +1,9 @@
-html, body, #map-canvas {
+html, body, #content, #app, #map-canvas {
   height: 100%;
   margin: 0;
   padding: 0;
 }
+
 #panel {
   position: absolute;
   top: 5px;
