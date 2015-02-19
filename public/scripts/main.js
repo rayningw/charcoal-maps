@@ -1,3 +1,102 @@
+var PLACE_TYPES = [
+  'accounting',
+  'airport',
+  'amusement_park',
+  'aquarium',
+  'art_gallery',
+  'atm',
+  'bakery',
+  'bank',
+  'bar',
+  'beauty_salon',
+  'bicycle_store',
+  'book_store',
+  'bowling_alley',
+  'bus_station',
+  'cafe',
+  'campground',
+  'car_dealer',
+  'car_rental',
+  'car_repair',
+  'car_wash',
+  'casino',
+  'cemetery',
+  'church',
+  'city_hall',
+  'clothing_store',
+  'convenience_store',
+  'courthouse',
+  'dentist',
+  'department_store',
+  'doctor',
+  'electrician',
+  'electronics_store',
+  'embassy',
+  'establishment',
+  'finance',
+  'fire_station',
+  'florist',
+  'food',
+  'funeral_home',
+  'furniture_store',
+  'gas_station',
+  'general_contractor',
+  'grocery_or_supermarket',
+  'gym',
+  'hair_care',
+  'hardware_store',
+  'health',
+  'hindu_temple',
+  'home_goods_store',
+  'hospital',
+  'insurance_agency',
+  'jewelry_store',
+  'laundry',
+  'lawyer',
+  'library',
+  'liquor_store',
+  'local_government_office',
+  'locksmith',
+  'lodging',
+  'meal_delivery',
+  'meal_takeaway',
+  'mosque',
+  'movie_rental',
+  'movie_theater',
+  'moving_company',
+  'museum',
+  'night_club',
+  'painter',
+  'park',
+  'parking',
+  'pet_store',
+  'pharmacy',
+  'physiotherapist',
+  'place_of_worship',
+  'plumber',
+  'police',
+  'post_office',
+  'real_estate_agency',
+  'restaurant',
+  'roofing_contractor',
+  'rv_park',
+  'school',
+  'shoe_store',
+  'shopping_mall',
+  'spa',
+  'stadium',
+  'storage',
+  'store',
+  'subway_station',
+  'synagogue',
+  'taxi_stand',
+  'train_station',
+  'travel_agency',
+  'university',
+  'veterinary_care',
+  'zoo',
+];
+
 var DEFAULT_PRESETS = {
   rockridge: {
     latitude: 37.8446,
@@ -30,7 +129,8 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       presets: DEFAULT_PRESETS,
-      initialLocation: DEFAULT_PRESETS.rockridge
+      initialLocation: DEFAULT_PRESETS.rockridge,
+      placeType: 'restaurant'
     }
   },
 
@@ -44,6 +144,10 @@ var App = React.createClass({
     this.locationJumpNotifier.listeners.forEach(function(listener) {
       listener(preset);
     });
+  },
+
+  handleSelectPlaceType: function(placeType) {
+    this.setState({placeType: placeType});
   },
 
   addressSearchNotifier: {
@@ -66,11 +170,15 @@ var App = React.createClass({
     return (
       <div id="app">
         <ControlPanel presets={this.state.presets}
+                      placeTypes={PLACE_TYPES}
+                      selectedPlaceType={this.state.placeType}
                       onSearch={this.handleSearch}
-                      onSelectPreset={this.handleSelectPreset} />
+                      onSelectPreset={this.handleSelectPreset}
+                      onSelectPlaceType={this.handleSelectPlaceType} />
         <MapPanel addressSearchNotifier={this.addressSearchNotifier}
                   locationJumpNotifier={this.locationJumpNotifier}
-                  initialLocation={this.state.initialLocation} />
+                  initialLocation={this.state.initialLocation}
+                  placeType={this.state.placeType} />
       </div>
     );
   }
@@ -95,11 +203,22 @@ var ControlPanel = React.createClass({
     event.target.selectedIndex = 0;
   },
 
+  handlePlaceTypeChange: function(event) {
+    var name = event.target.value;
+    this.props.onSelectPlaceType(name);
+  },
+
   render: function() {
     var presetsNodes = Object.keys(this.props.presets).map(function(name) {
       var preset = this.props.presets[name];
       return (
-        <option value={name}>{name}</option>
+        <option key={name} value={name}>{name}</option>
+      );
+    }.bind(this));
+
+    var placeTypesNodes = this.props.placeTypes.map(function(name) {
+      return (
+        <option key={name} value={name}>{name}</option>
       );
     }.bind(this));
 
@@ -115,6 +234,9 @@ var ControlPanel = React.createClass({
           <input ref="address" id="address" type="textbox" placeholder="Enter location..."></input>
           <input type="submit" value="Search"></input>
         </form>
+        <select onChange={this.handlePlaceTypeChange} value={this.props.selectedPlaceType}>
+          {placeTypesNodes}
+        </select>
       </div>
     );
   }
@@ -129,12 +251,12 @@ var MapPanel = React.createClass({
     this.props.locationJumpNotifier.subscribe(this.handleLocationJump);
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
-    // Let Google Maps JS handle the map.
-    return false;
+  componentDidUpdate: function(prevProps, prevState) {
+    this.radarSearchCurrentBounds();
   },
 
   render: function() {
+    // NOTE: Somehow React knows not to touch the child elements created by Google Maps JS
     return (
       <div id="map-canvas"></div>
     );
@@ -183,13 +305,13 @@ var MapPanel = React.createClass({
 
     this.mapState.placesService = new google.maps.places.PlacesService(this.mapState.map);
 
-    google.maps.event.addListener(this.mapState.map, 'bounds_changed', this.handleBoundsChangedCallback);
+    google.maps.event.addListener(this.mapState.map, 'bounds_changed', this.radarSearchCurrentBounds);
   },
 
-  handleBoundsChangedCallback: function() {
+  radarSearchCurrentBounds: function() {
     var request = {
       bounds: this.mapState.map.getBounds(),
-      types: ['restaurant']
+      types: [this.props.placeType]
     };
     this.mapState.placesService.radarSearch(request, this.handleRadarSearchCallback);
   },

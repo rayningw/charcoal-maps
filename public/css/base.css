@@ -8,7 +8,6 @@ html, body, #content, #app, #map-canvas {
   padding: 5px;
   margin: auto;
   top: 0;
-  height: 30px;
   line-height: 30px;
   text-align: center;
   background-color: #fff;
@@ -20,6 +19,10 @@ html, body, #content, #app, #map-canvas {
 }
 
 #panel > *:not(:first-child) {
+  margin-left: 10px;
+}
+
+#panel form *:not(:first-child) {
   margin-left: 10px;
 }
 
