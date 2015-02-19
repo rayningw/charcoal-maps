@@ -1,16 +1,30 @@
 html, body, #content, #app, #map-canvas {
   height: 100%;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
 #panel {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  margin-left: -180px;
-  z-index: 5;
-  background-color: #fff;
   padding: 5px;
+  margin: auto;
+  top: 0;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background-color: #fff;
   border: 1px solid #999;
+}
+
+#panel > * {
+  display: inline-block;
+}
+
+#panel > *:not(:first-child) {
+  margin-left: 10px;
+}
+
+#panel-title {
+  font-weight: bold;
+  font-size: large;
+  color: #36454f;
 }
