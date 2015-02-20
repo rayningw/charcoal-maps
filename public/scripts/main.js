@@ -1,3 +1,18 @@
+var HEATMAP_GRADIENT = [
+  'rgba(0, 255, 255, 0)',
+  '#935e66',
+  '#9f4a49',
+  '#dc4733',
+  '#fe6204',
+  '#fc6e00',
+  '#fd9800',
+  '#ffd40e',
+  '#fdfea4',
+  '#fefef5',
+];
+
+var HEATMAP_RADIUS = 30;
+  
 var PLACE_TYPES = {
   accounting: {
     label: 'Accounting',
@@ -602,7 +617,8 @@ var MapPanel = React.createClass({
     });
 
     this.mapState.heatmap = new google.maps.visualization.HeatmapLayer({
-      radius: 30
+      radius: HEATMAP_RADIUS,
+      gradient: HEATMAP_GRADIENT
     });
     this.mapState.heatmap.setMap(this.mapState.map);
 
