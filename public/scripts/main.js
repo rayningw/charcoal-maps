@@ -1,5 +1,126 @@
+// https://snazzymaps.com/style/15/subtle-grayscale
+var MAP_STYLES = [
+    {
+        "featureType": "landscape",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 65
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 51
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 30
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 40
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.province",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "lightness": -25
+            },
+            {
+                "saturation": -100
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "hue": "#ffff00"
+            },
+            {
+                "lightness": -25
+            },
+            {
+                "saturation": -97
+            }
+        ]
+    }
+];
+
+// TODO(rwu): Make the gradient outer edge blend with the overall map colour.
 var HEATMAP_GRADIENT = [
-  'rgba(0, 255, 255, 0)',
+  'rgba(255, 255, 255, 0)',
   '#935e66',
   '#9f4a49',
   '#dc4733',
@@ -613,7 +734,8 @@ var MapPanel = React.createClass({
         this.props.initialLocation.longitude);
     this.mapState.map = new google.maps.Map(document.getElementById('map-canvas'), {
       center: initialLatLng,
-      zoom: 15
+      zoom: 15,
+      styles: MAP_STYLES
     });
 
     this.mapState.heatmap = new google.maps.visualization.HeatmapLayer({
