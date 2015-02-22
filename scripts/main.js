@@ -1,4 +1,3 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"./scripts/main.js":[function(require,module,exports){
 // https://snazzymaps.com/style/15/subtle-grayscale
 var MAP_STYLES = [
     {
@@ -560,7 +559,7 @@ var DEFAULT_PRESETS = {
   }
 };
   
-var App = React.createClass({displayName: "App",
+var App = React.createClass({
 
   getInitialState: function() {
     return {
@@ -604,25 +603,25 @@ var App = React.createClass({displayName: "App",
 
   render: function() {
     return (
-      React.createElement("div", {id: "app"}, 
-        React.createElement(ControlPanel, {presets: this.state.presets, 
-                      placeTypes: PLACE_TYPES, 
-                      selectedPlaceType: this.state.placeType, 
-                      onSearch: this.handleSearch, 
-                      onSelectPreset: this.handleSelectPreset, 
-                      onSelectPlaceType: this.handleSelectPlaceType}), 
-        React.createElement(MapPanel, {addressSearchNotifier: this.addressSearchNotifier, 
-                  locationJumpNotifier: this.locationJumpNotifier, 
-                  initialLocation: this.state.initialLocation, 
-                  placeType: this.state.placeType})
-      )
+      <div id="app">
+        <ControlPanel presets={this.state.presets}
+                      placeTypes={PLACE_TYPES}
+                      selectedPlaceType={this.state.placeType}
+                      onSearch={this.handleSearch}
+                      onSelectPreset={this.handleSelectPreset}
+                      onSelectPlaceType={this.handleSelectPlaceType} />
+        <MapPanel addressSearchNotifier={this.addressSearchNotifier}
+                  locationJumpNotifier={this.locationJumpNotifier}
+                  initialLocation={this.state.initialLocation}
+                  placeType={this.state.placeType} />
+      </div>
     );
   }
 
 });
     
 
-var ControlPanel = React.createClass({displayName: "ControlPanel",
+var ControlPanel = React.createClass({
 
   handleSearch: function(event) {
     event.preventDefault();
@@ -648,7 +647,7 @@ var ControlPanel = React.createClass({displayName: "ControlPanel",
     var presetsNodes = Object.keys(this.props.presets).map(function(name) {
       var preset = this.props.presets[name];
       return (
-        React.createElement("option", {key: name, value: name}, preset.label)
+        <option key={name} value={name}>{preset.label}</option>
       );
     }.bind(this));
 
@@ -660,32 +659,32 @@ var ControlPanel = React.createClass({displayName: "ControlPanel",
         selectedPlaceTypeName = name;
       }
       return (
-        React.createElement("option", {key: name, value: name}, placeType.label)
+        <option key={name} value={name}>{placeType.label}</option>
       );
     }.bind(this));
 
     return (
-      React.createElement("div", {id: "panel"}, 
-        React.createElement("div", {id: "panel-title"}, "Charcoal Maps"), 
-        React.createElement("select", {onChange: this.handleSelectChange}, 
-          React.createElement("option", null, "Select preset..."), 
-          presetsNodes
-        ), 
-        React.createElement("div", null, "or"), 
-        React.createElement("form", {onSubmit: this.handleSearch}, 
-          React.createElement("input", {ref: "address", id: "address", type: "textbox", placeholder: "Enter location..."}), 
-          React.createElement("input", {type: "submit", value: "Search"})
-        ), 
-        React.createElement("select", {onChange: this.handlePlaceTypeChange, value: selectedPlaceTypeName}, 
-          placeTypesNodes
-        )
-      )
+      <div id="panel">
+        <div id="panel-title">Charcoal Maps</div>
+        <select onChange={this.handleSelectChange}>
+          <option>Select preset...</option>
+          {presetsNodes}
+        </select>
+        <div>or</div>
+        <form onSubmit={this.handleSearch}>
+          <input ref="address" id="address" type="textbox" placeholder="Enter location..."></input>
+          <input type="submit" value="Search"></input>
+        </form>
+        <select onChange={this.handlePlaceTypeChange} value={selectedPlaceTypeName}>
+          {placeTypesNodes}
+        </select>
+      </div>
     );
   }
 
 });
 
-var MapPanel = React.createClass({displayName: "MapPanel",
+var MapPanel = React.createClass({
 
   componentDidMount: function() {
     this.initializeMap();
@@ -700,7 +699,7 @@ var MapPanel = React.createClass({displayName: "MapPanel",
   render: function() {
     // NOTE: Somehow React knows not to touch the child elements created by Google Maps JS
     return (
-      React.createElement("div", {id: "map-canvas"})
+      <div id="map-canvas"></div>
     );
   },
 
@@ -774,10 +773,7 @@ var MapPanel = React.createClass({displayName: "MapPanel",
 });
 
 React.render(
-  React.createElement(App, null),
+  <App />,
   document.getElementById('content')
 );
 
-
-
-},{}]},{},["./scripts/main.js"]);
