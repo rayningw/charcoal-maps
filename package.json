@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "browserify": "^9.0.3",
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
     "reactify": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.4.0"
