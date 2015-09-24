@@ -118,7 +118,6 @@ var MAP_STYLES = [
     }
 ];
 
-// TODO(rwu): Make the gradient outer edge blend with the overall map colour.
 var HEATMAP_GRADIENT = [
   'rgba(255, 255, 255, 0)',
   '#935e66',
@@ -132,7 +131,13 @@ var HEATMAP_GRADIENT = [
   '#fefef5',
 ];
 
-var HEATMAP_RADIUS = 30;
+// Radius when the map is at the base zoom level
+var BASE_RADIUS = 30;
+
+var BASE_ZOOM = 15;
+
+// How sticky the adjusted radius stays near the base radius
+var RADIUS_STICKINESS = 2;
   
 var PLACE_TYPES = {
   accounting: {
@@ -559,8 +564,35 @@ var DEFAULT_PRESETS = {
   }
 };
 
+// http://gis.stackexchange.com/questions/7430/what-ratio-scales-do-google-maps-zoom-levels-correspond-to
+var GMAPS_ZOOM_SCALES = {
+  20 : 1128.497220,
+  19 : 2256.994440,
+  18 : 4513.988880,
+  17 : 9027.977761,
+  16 : 18055.955520,
+  15 : 36111.911040,
+  14 : 72223.822090,
+  13 : 144447.644200,
+  12 : 288895.288400,
+  11 : 577790.576700,
+  10 : 1155581.153000,
+  9  : 2311162.307000,
+  8  : 4622324.614000,
+  7  : 9244649.227000,
+  6  : 18489298.450000,
+  5  : 36978596.910000,
+  4  : 73957193.820000,
+  3  : 147914387.600000,
+  2  : 295828775.300000,
+  1  : 591657550.500000
+};
+
 exports.MAP_STYLES = MAP_STYLES;
 exports.HEATMAP_GRADIENT = HEATMAP_GRADIENT;
-exports.HEATMAP_RADIUS = HEATMAP_RADIUS;
+exports.BASE_RADIUS = BASE_RADIUS;
+exports.BASE_ZOOM = BASE_ZOOM;
+exports.RADIUS_STICKINESS = RADIUS_STICKINESS;
 exports.PLACE_TYPES = PLACE_TYPES;
 exports.DEFAULT_PRESETS = DEFAULT_PRESETS;
+exports.GMAPS_ZOOM_SCALES = GMAPS_ZOOM_SCALES;

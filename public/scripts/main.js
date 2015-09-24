@@ -198,12 +198,12 @@ var MapPanel = React.createClass({displayName: "MapPanel",
         this.props.initialLocation.longitude);
     this.mapState.map = new google.maps.Map(document.getElementById('map-canvas'), {
       center: initialLatLng,
-      zoom: 15,
+      zoom: constants.BASE_ZOOM,
       styles: constants.MAP_STYLES
     });
 
     this.mapState.heatmap = new google.maps.visualization.HeatmapLayer({
-      radius: constants.HEATMAP_RADIUS,
+      radius: constants.BASE_RADIUS,
       gradient: constants.HEATMAP_GRADIENT
     });
     this.mapState.heatmap.setMap(this.mapState.map);
@@ -213,6 +213,18 @@ var MapPanel = React.createClass({displayName: "MapPanel",
     this.mapState.placesService = new google.maps.places.PlacesService(this.mapState.map);
 
     google.maps.event.addListener(this.mapState.map, 'bounds_changed', this.radarSearchCurrentBounds);
+    google.maps.event.addListener(this.mapState.map, 'zoom_changed', this.setRadius);
+  },
+
+  setRadius: function() {
+    var rawRatio = constants.GMAPS_ZOOM_SCALES[constants.BASE_ZOOM]
+                   / constants.GMAPS_ZOOM_SCALES[this.mapState.map.getZoom()];
+    var ratio = (rawRatio - 1) * (1 / constants.RADIUS_STICKINESS) + 1;
+    var radius = Math.round(constants.BASE_RADIUS * ratio);
+    console.log('Setting radius: ' + radius + ' based on ratio: ' + ratio);
+    this.mapState.heatmap.setOptions({
+      radius: radius
+    });
   },
 
   radarSearchCurrentBounds: function() {
@@ -360,7 +372,6 @@ var MAP_STYLES = [
     }
 ];
 
-// TODO(rwu): Make the gradient outer edge blend with the overall map colour.
 var HEATMAP_GRADIENT = [
   'rgba(255, 255, 255, 0)',
   '#935e66',
@@ -374,7 +385,13 @@ var HEATMAP_GRADIENT = [
   '#fefef5',
 ];
 
-var HEATMAP_RADIUS = 30;
+// Radius when the map is at the base zoom level
+var BASE_RADIUS = 30;
+
+var BASE_ZOOM = 15;
+
+// How sticky the adjusted radius stays near the base radius
+var RADIUS_STICKINESS = 2;
   
 var PLACE_TYPES = {
   accounting: {
@@ -801,11 +818,38 @@ var DEFAULT_PRESETS = {
   }
 };
 
+// http://gis.stackexchange.com/questions/7430/what-ratio-scales-do-google-maps-zoom-levels-correspond-to
+var GMAPS_ZOOM_SCALES = {
+  20 : 1128.497220,
+  19 : 2256.994440,
+  18 : 4513.988880,
+  17 : 9027.977761,
+  16 : 18055.955520,
+  15 : 36111.911040,
+  14 : 72223.822090,
+  13 : 144447.644200,
+  12 : 288895.288400,
+  11 : 577790.576700,
+  10 : 1155581.153000,
+  9  : 2311162.307000,
+  8  : 4622324.614000,
+  7  : 9244649.227000,
+  6  : 18489298.450000,
+  5  : 36978596.910000,
+  4  : 73957193.820000,
+  3  : 147914387.600000,
+  2  : 295828775.300000,
+  1  : 591657550.500000
+};
+
 exports.MAP_STYLES = MAP_STYLES;
 exports.HEATMAP_GRADIENT = HEATMAP_GRADIENT;
-exports.HEATMAP_RADIUS = HEATMAP_RADIUS;
+exports.BASE_RADIUS = BASE_RADIUS;
+exports.BASE_ZOOM = BASE_ZOOM;
+exports.RADIUS_STICKINESS = RADIUS_STICKINESS;
 exports.PLACE_TYPES = PLACE_TYPES;
 exports.DEFAULT_PRESETS = DEFAULT_PRESETS;
+exports.GMAPS_ZOOM_SCALES = GMAPS_ZOOM_SCALES;
 
 
 },{}]},{},["./scripts/main.js"]);

@@ -50,12 +50,12 @@ var MapPanel = React.createClass({
         this.props.initialLocation.longitude);
     this.mapState.map = new google.maps.Map(document.getElementById('map-canvas'), {
       center: initialLatLng,
-      zoom: 15,
+      zoom: constants.BASE_ZOOM,
       styles: constants.MAP_STYLES
     });
 
     this.mapState.heatmap = new google.maps.visualization.HeatmapLayer({
-      radius: constants.HEATMAP_RADIUS,
+      radius: constants.BASE_RADIUS,
       gradient: constants.HEATMAP_GRADIENT
     });
     this.mapState.heatmap.setMap(this.mapState.map);
@@ -65,6 +65,18 @@ var MapPanel = React.createClass({
     this.mapState.placesService = new google.maps.places.PlacesService(this.mapState.map);
 
     google.maps.event.addListener(this.mapState.map, 'bounds_changed', this.radarSearchCurrentBounds);
+    google.maps.event.addListener(this.mapState.map, 'zoom_changed', this.setRadius);
+  },
+
+  setRadius: function() {
+    var rawRatio = constants.GMAPS_ZOOM_SCALES[constants.BASE_ZOOM]
+                   / constants.GMAPS_ZOOM_SCALES[this.mapState.map.getZoom()];
+    var ratio = (rawRatio - 1) * (1 / constants.RADIUS_STICKINESS) + 1;
+    var radius = Math.round(constants.BASE_RADIUS * ratio);
+    console.log('Setting radius: ' + radius + ' based on ratio: ' + ratio);
+    this.mapState.heatmap.setOptions({
+      radius: radius
+    });
   },
 
   radarSearchCurrentBounds: function() {
