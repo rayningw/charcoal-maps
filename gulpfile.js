@@ -8,7 +8,7 @@ var uglify = require('gulp-uglify');
 
 // Bundle once
 gulp.task('build', function() {
-    return bundleWith(getBundler());
+    return bundleWith(getBundler(), { uglify: true });
 });
 
 // Watch for file changes then bundle
@@ -28,10 +28,13 @@ function getBundler() {
 }
 
 // Bundles files with the provided bundler
-function bundleWith(bundler) {
-  console.log('Bundling...');
-  return bundler.bundle()
-    .pipe(source('main.js'))
-    .pipe(streamify(uglify()))
-    .pipe(gulp.dest('./public/scripts'));
+function bundleWith(bundler, opts) {
+    opts = opts || {};
+    console.log('Bundling...');
+    var b = bundler.bundle()
+        .pipe(source('main.js'));
+    if (opts.uglify) {
+        b = b.pipe(streamify(uglify()));
+    }
+    return b.pipe(gulp.dest('./public/scripts'));
 }
