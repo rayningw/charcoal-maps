@@ -1,8 +1,15 @@
-html, body, #content, #app, #map-canvas {
+html, body, #content, #app {
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
+}
+
+#map-canvas {
+  /* NOTE: Attempt to fill the remaining height with the map. We do not know the
+   * height of the panel so absolute positioning cannot be used. Map controls
+   * that normally appear on the bottom must be repositioned to the top. */
+  height: 100%;
 }
 
 #panel {

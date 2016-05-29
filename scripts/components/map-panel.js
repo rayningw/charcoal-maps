@@ -51,7 +51,15 @@ var MapPanel = React.createClass({
     this.mapState.map = new google.maps.Map(document.getElementById('map-canvas'), {
       center: initialLatLng,
       zoom: constants.BASE_ZOOM,
-      styles: constants.MAP_STYLES
+      styles: constants.MAP_STYLES,
+      // Re-position controls normally on the bottom to the top as they are cut
+      // off by the map panel overflow. See note on css.
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_TOP
+      },
+      streetViewControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_TOP
+      }
     });
 
     this.mapState.heatmap = new google.maps.visualization.HeatmapLayer({
