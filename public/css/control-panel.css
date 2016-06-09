@@ -1,0 +1,21 @@
+#panel {
+  padding: 5px;
+}
+
+#panel > * {
+  display: inline-block;
+}
+
+#panel > *:not(:first-child) {
+  margin-left: 10px;
+}
+
+#panel form *:not(:first-child) {
+  margin-left: 10px;
+}
+
+#panel-title {
+  font-weight: bold;
+  font-size: large;
+  color: #36454f;
+}

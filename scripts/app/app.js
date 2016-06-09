@@ -1,11 +1,19 @@
 var ControlPanel = require("../control-panel/control-panel.js");
 var MapPanel = require("../map-panel/map-panel.js");
 
+var Notifier = require("../model/notifier.js").Notifier;
 var constants = require("../constants.js");
 
-var React = require("react");
+var Slideout = require("charm/react/slideout/slideout.js");
+
+var React = require("react"),
+  T = React.PropTypes;
 
 var App = React.createClass({
+
+  propTypes: {
+    isTouchScreen: T.func.isRequired
+  },
 
   getInitialState: function() {
     return {
@@ -15,51 +23,52 @@ var App = React.createClass({
     };
   },
 
+  onSearchNotifier: new Notifier(),
+  onSelectPresetNotifier: new Notifier(),
+  onToggleSlideoutNotifier: new Notifier(),
+
   handleSearch: function(address) {
-    this.addressSearchNotifier.listeners.forEach(function(listener) {
-      listener(address);
-    });
+    this.onSearchNotifier.notify(address);
   },
 
   handleSelectPreset: function(preset) {
-    this.locationJumpNotifier.listeners.forEach(function(listener) {
-      listener(preset);
-    });
+    this.onSelectPresetNotifier.notify(preset);
+  },
+
+  handleToggleSlideout: function() {
+    this.onToggleSlideoutNotifier.notify();
   },
 
   handleSelectPlaceType: function(placeType) {
     this.setState({placeType: placeType});
   },
 
-  addressSearchNotifier: {
-    listeners: [],
-    subscribe: function(listener) {
-      // TODO(rwu): Return an unsubscribe function.
-      this.listeners.push(listener);
-    }
-  },
-
-  locationJumpNotifier: {
-    listeners: [],
-    subscribe: function(listener) {
-      // TODO(rwu): Return an unsubscribe function.
-      this.listeners.push(listener);
-    }
-  },
-
   render: function() {
-    return (
-      <div id="app">
-        <ControlPanel presets={this.state.presets}
-                      placeTypes={constants.PLACE_TYPES}
-                      selectedPlaceType={this.state.placeType}
-                      onSearch={this.handleSearch}
-                      onSelectPreset={this.handleSelectPreset}
-                      onSelectPlaceType={this.handleSelectPlaceType} />
-        <MapPanel addressSearchNotifier={this.addressSearchNotifier}
-                  locationJumpNotifier={this.locationJumpNotifier}
+    var menu = (
+      <ControlPanel presets={this.state.presets}
+                    placeTypes={constants.PLACE_TYPES}
+                    selectedPlaceType={this.state.placeType}
+                    onSearch={this.handleSearch}
+                    onSelectPreset={this.handleSelectPreset}
+                    onSelectPlaceType={this.handleSelectPlaceType} />
+    );
+
+    var content = (
+      <div>
+        <button id="toggle-slide-btn" className="map-control" onClick={this.handleToggleSlideout}>☰</button>
+        <MapPanel addressSearchNotifier={this.onSearchNotifier}
+                  locationJumpNotifier={this.onSelectPresetNotifier}
                   initialLocation={this.state.initialLocation}
                   placeType={this.state.placeType} />
+      </div>
+    );
+
+    return (
+      <div id="app">
+        <Slideout isTouchScreen={this.props.isTouchScreen}
+            content={content}
+            menu={menu}
+            subscribeToToggle={this.onToggleSlideoutNotifier.subscribe.bind(this.onToggleSlideoutNotifier)} />
       </div>
     );
   }

@@ -63,8 +63,9 @@ var MapPanel = React.createClass({
       center: initialLatLng,
       zoom: constants.BASE_ZOOM,
       styles: constants.MAP_STYLES,
-      // Re-position controls normally on the bottom to the top as they are cut
-      // off by the map panel overflow. See note on css.
+      mapTypeControlOptions: {
+        position: google.maps.ControlPosition.TOP
+      },
       zoomControlOptions: {
         position: google.maps.ControlPosition.RIGHT_TOP
       },
