@@ -1,5 +1,7 @@
 var constants = require('../constants.js');
 
+var React = require("react");
+
 var MapPanel = React.createClass({
 
   componentDidMount: function() {

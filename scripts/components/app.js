@@ -2,6 +2,8 @@ var constants = require('../constants.js');
 var ControlPanel = require('./control-panel.js');
 var MapPanel = require('./map-panel.js');
 
+var React = require("react");
+
 var App = React.createClass({
 
   getInitialState: function() {
@@ -17,7 +19,7 @@ var App = React.createClass({
       listener(address);
     });
   },
-  
+
   handleSelectPreset: function(preset) {
     this.locationJumpNotifier.listeners.forEach(function(listener) {
       listener(preset);
