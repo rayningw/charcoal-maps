@@ -1,6 +1,7 @@
+var ControlPanel = require("../control-panel/control-panel.js");
+var MapPanel = require("../map-panel/map-panel.js");
+
 var constants = require("../constants.js");
-var ControlPanel = require("./control-panel.js");
-var MapPanel = require("./map-panel.js");
 
 var React = require("react");
 
