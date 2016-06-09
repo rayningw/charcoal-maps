@@ -14,16 +14,14 @@ var ControlPanel = React.createClass({
 
   handleSearch: function(event) {
     event.preventDefault();
-    // TODO(rwu): Get address using virtual DOM.
-    var address = this.refs.address.getDOMNode().value.trim();
+    var address = this.refs.address.value.trim();
     this.props.onSearch(address);
   },
 
   handleSelectChange: function(event) {
     var name = event.target.value;
     this.props.onSelectPreset(this.props.presets[name]);
-    // TODO(rwu): Get address using virtual DOM.
-    this.refs.address.getDOMNode().value = "";
+    this.refs.address.value = "";
     event.target.selectedIndex = 0;
   },
 
