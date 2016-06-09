@@ -1,8 +1,17 @@
-var constants = require('../constants.js');
+/*global google*/
+var constants = require("../constants.js");
 
-var React = require("react");
+var React = require("react"),
+  T = React.PropTypes;
 
 var MapPanel = React.createClass({
+
+  propTypes: {
+    addressSearchNotifier: T.object.isRequired,
+    locationJumpNotifier: T.object.isRequired,
+    initialLocation: T.object.isRequired,
+    placeType: T.object.isRequired
+  },
 
   componentDidMount: function() {
     this.initializeMap();
@@ -10,7 +19,7 @@ var MapPanel = React.createClass({
     this.props.locationJumpNotifier.subscribe(this.handleLocationJump);
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function() {
     this.radarSearchCurrentBounds();
   },
 
@@ -29,7 +38,7 @@ var MapPanel = React.createClass({
   },
 
   handleAddressSearch: function(address) {
-    this.mapState.geocoder.geocode({'address': address}, this.handleGeocodeCallback);
+    this.mapState.geocoder.geocode({"address": address}, this.handleGeocodeCallback);
   },
 
   handleLocationJump: function(location) {
@@ -42,7 +51,7 @@ var MapPanel = React.createClass({
       this.mapState.map.setCenter(results[0].geometry.location);
     }
     else {
-      alert('Geocode was not successful for the following reason: ' + status);
+      alert("Geocode was not successful for the following reason: " + status);
     }
   },
 
@@ -50,7 +59,7 @@ var MapPanel = React.createClass({
     var initialLatLng = new google.maps.LatLng(
         this.props.initialLocation.latitude,
         this.props.initialLocation.longitude);
-    this.mapState.map = new google.maps.Map(document.getElementById('map-canvas'), {
+    this.mapState.map = new google.maps.Map(document.getElementById("map-canvas"), {
       center: initialLatLng,
       zoom: constants.BASE_ZOOM,
       styles: constants.MAP_STYLES,
@@ -74,8 +83,8 @@ var MapPanel = React.createClass({
 
     this.mapState.placesService = new google.maps.places.PlacesService(this.mapState.map);
 
-    google.maps.event.addListener(this.mapState.map, 'bounds_changed', this.radarSearchCurrentBounds);
-    google.maps.event.addListener(this.mapState.map, 'zoom_changed', this.setRadius);
+    google.maps.event.addListener(this.mapState.map, "bounds_changed", this.radarSearchCurrentBounds);
+    google.maps.event.addListener(this.mapState.map, "zoom_changed", this.setRadius);
   },
 
   setRadius: function() {
@@ -83,7 +92,7 @@ var MapPanel = React.createClass({
                    / constants.GMAPS_ZOOM_SCALES[this.mapState.map.getZoom()];
     var ratio = (rawRatio - 1) * (1 / constants.RADIUS_STICKINESS) + 1;
     var radius = Math.round(constants.BASE_RADIUS * ratio);
-    console.log('Setting radius: ' + radius + ' based on ratio: ' + ratio);
+    console.log("Setting radius: " + radius + " based on ratio: " + ratio);
     this.mapState.heatmap.setOptions({
       radius: radius
     });

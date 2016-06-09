@@ -1,6 +1,16 @@
-var React = require("react");
+var React = require("react"),
+  T = React.PropTypes;
 
 var ControlPanel = React.createClass({
+
+  propTypes: {
+    onSearch: T.func.isRequired,
+    onSelectPreset: T.func.isRequired,
+    onSelectPlaceType: T.func.isRequired,
+    presets: T.object.isRequired,
+    placeTypes: T.object.isRequired,
+    selectedPlaceType: T.object.isRequired
+  },
 
   handleSearch: function(event) {
     event.preventDefault();
@@ -13,7 +23,7 @@ var ControlPanel = React.createClass({
     var name = event.target.value;
     this.props.onSelectPreset(this.props.presets[name]);
     // TODO(rwu): Get address using virtual DOM.
-    this.refs.address.getDOMNode().value = '';
+    this.refs.address.getDOMNode().value = "";
     event.target.selectedIndex = 0;
   },
 

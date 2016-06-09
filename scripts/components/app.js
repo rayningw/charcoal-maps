@@ -1,6 +1,6 @@
-var constants = require('../constants.js');
-var ControlPanel = require('./control-panel.js');
-var MapPanel = require('./map-panel.js');
+var constants = require("../constants.js");
+var ControlPanel = require("./control-panel.js");
+var MapPanel = require("./map-panel.js");
 
 var React = require("react");
 
@@ -11,7 +11,7 @@ var App = React.createClass({
       presets: constants.DEFAULT_PRESETS,
       initialLocation: constants.DEFAULT_PRESETS.rockridge,
       placeType: constants.PLACE_TYPES.restaurant
-    }
+    };
   },
 
   handleSearch: function(address) {
