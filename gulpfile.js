@@ -1,3 +1,4 @@
+// TODO(ray): Figure out what plugin is causing incompatibility with node v6
 var browserify = require("browserify");
 var gulp = require("gulp");
 var gutil = require("gulp-util");
