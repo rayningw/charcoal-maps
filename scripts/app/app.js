@@ -4,7 +4,7 @@ var MapPanel = require("../map-panel/map-panel.js");
 var Notifier = require("../model/notifier.js").Notifier;
 var constants = require("../constants.js");
 
-var Slideout = require("charm/react/slideout/slideout.js");
+var Slideout = require("slideout/slideout.js");
 
 var React = require("react"),
   T = React.PropTypes;
